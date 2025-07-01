@@ -1,0 +1,49 @@
+_BASE_: "../Base-RCNN-FPN.yaml"
+OUTPUT_DIR: "output/relation_clust_allencode_distance_ctrans2/gvrd_instance(gt_anchor)_group(cosinetrain_loc)_relation(crowd)=05"
+LESS: True
+SIMILARITY: [0.5,0]
+MODEL:
+  DEVICE: "cuda"
+  WEIGHTS: "models/R101-FPN-3x.pkl"
+  TRAINABLE: ["relation_heads"]
+  MASK_ON: True
+  META_ARCHITECTURE: "GeneralizedRCNNDistanceSimilarityAllEncodeTrain"
+  RESNETS:
+    DEPTH: 101
+  RPN:
+    USE_GT_INSTANCE: True
+  ROI_HEADS:
+    NUM_CLASSES: 80
+    RELATION_NUM_CLASSES: 96
+    ENCODE_DIM: 1024
+    INSTANCE_HEAD: False
+    SIMILARITY_TRAIN_ONLY_SAME_CLASS: False
+    GT_SIMILARITY_MODE: ""
+    SIMILARITY_MODE: "cosine"
+    SIMILARITY_FEATURE: "loc"
+    GRAPH_SEARCH_MODE: ["connect"]
+    SIMILARITY_LOSS: ""
+  RELATION_HEADS:
+    NAME: "DifferentRelationHeads_CTrans2"
+    RELATION_HEAD_LIST: [ "instance","crowd",]
+    ATTENTION: True
+    IN_CROWD_USE_CROWD: False
+    USE_ATTENTION_FEATURE: False
+DATASETS:
+  TRAIN: ("cvrd_train",)
+  TEST: ("cvrd_test",)
+DATALOADER:
+  NUM_WORKERS: 0
+INPUT:
+  MASK_FORMAT: "bitmask"
+SOLVER:
+  IMS_PER_BATCH: 1
+  CHECKPOINT_PERIOD: 8000
+  MAX_ITER: 48000
+  #NESTEROV: True
+  BASE_LR: 0.01 # 0.001x30000-relation_cls, 0.001x30000-predicate, 0.01x20000-instance pair,
+  BIAS_LR_FACTOR: 1.0
+  WARMUP_FACTOR: 0.02
+  WARMUP_ITERS: 100
+  WARMUP_METHOD: linear
+  STEPS: (16000, 32000)

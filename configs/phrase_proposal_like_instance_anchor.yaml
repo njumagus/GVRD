@@ -1,0 +1,43 @@
+_BASE_: "Base-RCNN-FPN.yaml"
+OUTPUT_DIR: "output/phrase_proposal_like_instance_anchor"
+MODEL:
+  DEVICE: "cuda"
+  META_ARCHITECTURE: "GeneralizedRCNNWithPhraseProposal"
+  MASK_ON: True
+  WEIGHTS: "models/R101-FPN-3x_init.pth"
+  TRAINABLE: ["phrase_proposal_generator"]
+  RESNETS:
+    DEPTH: 101
+  RPN:
+    CROWD_PRE_NMS_TOPK_TRAIN: 1000  # Per FPN level
+    CROWD_PRE_NMS_TOPK_TEST: 1000  # Per FPN level
+    CROWD_POST_NMS_TOPK_TRAIN: 500
+    CROWD_POST_NMS_TOPK_TEST: 1000
+
+  ROI_HEADS:
+    NUM_CLASSES: 80
+    RELATION_NUM_CLASSES: 96
+  PROPOSAL_GENERATOR:
+    NAME: "RPN"
+  CROWD_PROPOSAL_GENERATOR:
+    NAME: "RPN"
+
+DATASETS:
+  TRAIN: ("cvrd_train",)
+  TEST: ("cvrd_test",)
+DATALOADER:
+  NUM_WORKERS: 0
+INPUT:
+  MASK_FORMAT: "bitmask"
+SOLVER:
+  IMS_PER_BATCH: 1
+  CHECKPOINT_PERIOD: 8000
+  MAX_ITER: 48000
+  #NESTEROV: True
+  BASE_LR: 0.01 # 0.001x30000-relation_cls, 0.001x30000-predicate, 0.01x20000-instance pair,
+  BIAS_LR_FACTOR: 1.0
+  WARMUP_FACTOR: 0.02
+  WARMUP_ITERS: 100
+  WARMUP_METHOD: linear
+  STEPS: (16000, 32000)
+

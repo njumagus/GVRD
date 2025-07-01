@@ -1,0 +1,4 @@
+output/
+models/
+detectron2/_C.**
+cvrd_evaluate_result_less_box_detail.csv

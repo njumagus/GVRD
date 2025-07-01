@@ -46,6 +46,7 @@ docker run -it -v /host/path/to/VROID:/docker/path/to/VROID --ipc=host --net=hos
 ## Dataset
 We constructed a [COCO-GVR](https://drive.google.com/file/d/1MY0jCKdJ5FHx4_VfH-KBCmXQWbsa2LHP/view?usp=sharing) dataset.
 Download the data to  
+```
 ../data/gvrd  
 ├── train  
 │   ├── images_dict.json  
@@ -55,20 +56,23 @@ Download the data to
 │   └── images_triplets_dict.json  
 ├── class_dict.json  
 └── relation_dict.json  
-
+```
 ## Preprocess
 #### installation
 ```
 python setup.py build develop
 ```
 #### data preparation
-Download the [models](https://pan.baidu.com/s/1ohpgwH0tgvgvgK1jre_EGg?pwd=8cgj) to:  
+Download the [models](https://pan.baidu.com/s/1ohpgwH0tgvgvgK1jre_EGg?pwd=8cgj) to:
+```
 ./  
 ├── models/R101-FPN-3x.pkl  
 └── output  
-    ├── relation_clust_allencode_distance_ctrans2/gvrd_instance(gt_anchor)_group(cosinetrain_loc)_relation(crowdphrase)=05/model_final.pth    
+    ├── relation_clust_allencode_distance_ctrans2  
+    │   └── gvrd_instance(gt_anchor)_group(cosinetrain_loc)_relation(crowdphrase)=05  
+    │       └── model_final.pth    
     └── ...  
-
+```
 ## Train
 ```
 python main.py --mode train_relation --config "configs/gvrd/relation_clust_allencode_distance_ctrans2/gvrd_instance(gt_anchor)_group(cosinetrain_loc)_relation(crowdphrase)=05.yaml"
